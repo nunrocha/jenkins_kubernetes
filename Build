@@ -1,0 +1,35 @@
+def generateStage(job) {
+    return {
+        stage("stage: ${job}") {
+                echo "This is ${job}."
+        }
+    }
+}
+ 
+pipeline {
+    agent any
+ 
+    stages {
+        stage('Create List of Stages to run in Parallel') {
+            steps {
+                script {
+                    def list = ["Lint-1", "Lint-2", "Lint-3", "Lint-4", "Lint-5"]
+                    // you may create your list here, lets say reading from a file after checkout
+                    // personally, I like to use scriptler scripts and load the as simple as:
+                    // list = load '/var/lib/jenkins/scriptler/scripts/load-list-script.groovy'
+                    parallelStagesMap = list.collectEntries {
+                        ["${it}" : generateStage(it)]
+                    }
+                }
+            }
+        }
+ 
+        stage('Run Stages in Parallel') {
+            steps {
+                script {
+                    parallel parallelStagesMap
+                }
+            }
+        }
+    }
+}
