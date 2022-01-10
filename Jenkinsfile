@@ -7,7 +7,7 @@ def generateStage(job) {
 }
  
 pipeline {
-    agent {any}
+    agent any
  
     stages {
         stage('Create List of Stages to run in Parallel') {
