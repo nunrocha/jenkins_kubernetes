@@ -10,6 +10,11 @@ pipeline {
     agent any
  
     stages {
+	stage('Parallel tests execution approval'){
+	      steps {
+        		input "Run the parallel tests?"
+      		}
+	}
         stage('Create List of Stages to run in Parallel') {
             steps {
                 script {
